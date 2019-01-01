@@ -1,6 +1,6 @@
 ## Playing with RabbitMQ. Usage examples
 
-The RabbitMQ documentation is great. You can copy and paste one example in your favourite language and all is up and running. That's great but sometimes we need to master a little bit. In this post I want to show a different examples that I've. Basically to don't forget them. My computer isn't the best place to store documentation.
+The RabbitMQ documentation is great. You can copy and paste one example in your favourite language and all is up and running. That's great but sometimes we need to master a little bit. In this post I want to show different examples that I've playing with. Basically because I don't want to forget them. My computer isn't the best place to store my documentation.
 
 ### Example 1
 
@@ -8,7 +8,7 @@ It's the simpler example.
 
 > Producer -> Queue -> Consumer.
 
-I started to understand RabbitMQ when I realized that this picture is impossible. One producer cannot write to a queue. We always need an exchange. The trick here is that we're not creating on exchange. We're using the default one (''). This exchange put the message in the queue named like the routing_key that we're using
+I've started to understand RabbitMQ when I realized that this picture is impossible. One producer cannot write directly to a queue. We always need an Exchange. The trick here is that we're not creating the Exchange. We're using the default one (''). This exchange put the message in one queue named like the routing_key.
 
 The Producer:
 ```python
@@ -79,8 +79,7 @@ channel.start_consuming()
 ```
 
 ### Example 2
-Now the same example than the previous one. 
-But now we´ll use a one fanout exchange
+Now the same example than the previous one but using a fanout Exchange instead of the default one.
 
 The producer
 ```python
@@ -120,7 +119,7 @@ if __name__ == '__main__':
     event(sys.argv[1])
 ```
 
-The consumer need to use a binding to join exchange and queue
+The consumer needs to use a binding to join exchange and queue.
 ```python
 import pika
 import logging
@@ -167,7 +166,8 @@ channel.start_consuming()
 
 ### Example 3
 The first two examples came from the official documentation. 
-Now we're going to do something more complicated. We'll retry each message 5 times. The idea is create a header with the retry count.
+Now we're going to do something "more complicated". We'll retry each message 5 times. 
+The idea is create a header with the retry count.
 The Producer:
 ```python
 import pika
@@ -210,7 +210,8 @@ if __name__ == '__main__':
     event(sys.argv[1])
 ```
 
-And the Consumer, where we can see how we re-send a new message with the same body and headers but incrementing the counter each time
+In the Consumer we can see how we re-send a new message with the same body and headers but incrementing the counter.
+
 ```python
 import pika
 import sys
@@ -473,6 +474,4 @@ channel.queue_declare(queue=queue_name)
 channel.basic_consume(consumer_callback=callback, queue=queue_name, no_ack=True)
 channel.basic_qos(prefetch_count=1)
 channel.start_consuming()
-
 ```
-
